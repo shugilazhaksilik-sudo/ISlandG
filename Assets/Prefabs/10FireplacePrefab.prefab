@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2468952199231269354}
   - component: {fileID: 4738851863185346440}
   - component: {fileID: 5003822445595906429}
-  - component: {fileID: -8677343918638809218}
+  - component: {fileID: -2630081140737603697}
   m_Layer: 0
   m_Name: 10FireplacePrefab
   m_TagString: Untagged
@@ -145,7 +145,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: a473540ebad8ce646863e97d6178ea49, type: 2}
---- !u!114 &-8677343918638809218
+  currentDurability: -1
+--- !u!114 &-2630081140737603697
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,8 +155,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 993554218204151198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3f23de309bc57446bcac088637b4071, type: 3}
+  m_Script: {fileID: 11500000, guid: 3399fc128e996e945af2dfcb8eaff146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropDuration: 0.8
-  scatterRadius: 1
+  unlitSprite: {fileID: 785493278, guid: 148f00b55445e2c428017ea966a6335c, type: 3}
+  extinguishedSprite: {fileID: -400229628, guid: 148f00b55445e2c428017ea966a6335c, type: 3}
+  burningSprites:
+  - {fileID: -1137299712, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
+  - {fileID: 1732778474, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
+  - {fileID: 600021289, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
+  - {fileID: 718112155, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
+  animationSpeed: 0.3
+  sparkItem: {fileID: 11400000, guid: 08e0388bbe6b6964abee40444e1db423, type: 2}
+  fireplaceItem: {fileID: 11400000, guid: a473540ebad8ce646863e97d6178ea49, type: 2}
+  cookingRecipes:
+  - rawFood: {fileID: 11400000, guid: fdb4b6e02f4c745468cf02395cdbf3f6, type: 2}
+    cookedFood: {fileID: 11400000, guid: ad36b153a53cde44ca35bc8a2deed85d, type: 2}
+  - rawFood: {fileID: 11400000, guid: 3d5d88c4f1ac54a47ade9ea0968087b9, type: 2}
+    cookedFood: {fileID: 11400000, guid: be793313ed3116649af6d6ff674a0087, type: 2}
+  audioSource: {fileID: 0}
+  igniteSound: {fileID: 0}
+  cracklingSound: {fileID: 0}
+  cookingSound: {fileID: 0}
+  extinguishSound: {fileID: 0}
