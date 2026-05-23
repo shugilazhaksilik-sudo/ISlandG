@@ -28,6 +28,10 @@ public class Campfire : MonoBehaviour
     [Tooltip("Предмет Основа Костра (10Fireplace) для возврата при разборке")]
     public ItemData fireplaceItem;
 
+    [Header("Shelter Settings")]
+    [Tooltip("Радиус проверки укрытия под большой пальмой (BigPalm)")]
+    public float shelterCheckRadius = 1.8f;
+
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
     public AudioClip igniteSound;
@@ -67,14 +71,27 @@ public class Campfire : MonoBehaviour
     private void Update()
     {
         // Проигрываем 4-кадровую анимацию пламени без использования Animator
-        if (currentState == CampfireState.Burning && burningSprites != null && burningSprites.Length > 0)
+        if (currentState == CampfireState.Burning)
         {
-            animTimer += Time.deltaTime;
-            if (animTimer >= animationSpeed)
+            if (burningSprites != null && burningSprites.Length > 0)
             {
-                animTimer = 0f;
-                currentFrameIndex = (currentFrameIndex + 1) % burningSprites.Length;
-                spriteRenderer.sprite = burningSprites[currentFrameIndex];
+                animTimer += Time.deltaTime;
+                if (animTimer >= animationSpeed)
+                {
+                    animTimer = 0f;
+                    currentFrameIndex = (currentFrameIndex + 1) % burningSprites.Length;
+                    spriteRenderer.sprite = burningSprites[currentFrameIndex];
+                }
+            }
+
+            // Тушение дождем, если костер не под укрытием большой пальмы
+            if (WeatherManager.instance != null && WeatherManager.instance.IsRaining())
+            {
+                if (!IsShelteredByBigPalm())
+                {
+                    Debug.Log("Костер потух под дождем!");
+                    Extinguish();
+                }
             }
         }
     }
@@ -132,6 +149,21 @@ public class Campfire : MonoBehaviour
         SetState(CampfireState.Extinguished);
     }
 
+    // Проверка, находится ли костер под ветками Большой Пальмы (BigPalm)
+    public bool IsShelteredByBigPalm()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, shelterCheckRadius);
+        foreach (var col in colliders)
+        {
+            // Ищем ствол или ветки большой пальмы по ее названию
+            if (col.gameObject.name.Contains("BigPalm"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void OnMouseOver()
     {
         // Взаимодействие на правую кнопку мыши (ПКМ)
@@ -163,6 +195,13 @@ public class Campfire : MonoBehaviour
                 // Разжигаем костер Искрой
                 if (activeItem == sparkItem)
                 {
+                    // Проверяем, идет ли дождь и защищен ли костер большой пальмой
+                    if (WeatherManager.instance != null && WeatherManager.instance.IsRaining() && !IsShelteredByBigPalm())
+                    {
+                        Debug.Log("Нельзя разжечь костер под дождем без укрытия!");
+                        return;
+                    }
+
                     InventoryManager.instance.RemoveActiveItem(); // Потребляем 1 искру
                     SetState(CampfireState.Burning);
                     Debug.Log("Костер успешно разожжен с помощью Искры!");
