@@ -77,7 +77,7 @@ public class FirePloughStation : MonoBehaviour
         Debug.Log("Есть искра! Ждем...");
 
         // Ждем 1.5 секунды
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
 
         // Пытаемся добавить искру ОДИН раз после ожидания
         if (InventoryManager.instance.TryAddItem(sparkItemData))

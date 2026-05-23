@@ -13,5 +13,19 @@ MonoBehaviour:
   m_Name: 10Fireplace
   m_EditorClassIdentifier: 
   itemName: 
-  icon: {fileID: -1137299712, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
+  icon: {fileID: 785493278, guid: 148f00b55445e2c428017ea966a6335c, type: 3}
   dropPrefab: {fileID: 993554218204151198, guid: 569f88c6ca80745408e2db796bd5f0fe, type: 3}
+  canBeDropped: 1
+  isPlaceable: 1
+  placeablePrefab: {fileID: 993554218204151198, guid: 397b5bbf1614d274694a851a13306cda, type: 3}
+  hasLifetime: 0
+  maxLifetime: 15
+  isTool: 0
+  maxDurability: 50
+  sideOverlaySprite: {fileID: 0}
+  animationNameUp: 
+  animationNameDown: 
+  animationNameLeft: 
+  animationNameRight: 
+  isFood: 0
+  cookedVersion: {fileID: 0}

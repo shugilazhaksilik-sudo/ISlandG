@@ -15,3 +15,17 @@ MonoBehaviour:
   itemName: 
   icon: {fileID: -820243969, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
   dropPrefab: {fileID: 993554218204151198, guid: 02888421803828547939dae3a0a2b72b, type: 3}
+  canBeDropped: 1
+  isPlaceable: 0
+  placeablePrefab: {fileID: 0}
+  hasLifetime: 0
+  maxLifetime: 15
+  isTool: 0
+  maxDurability: 50
+  sideOverlaySprite: {fileID: 0}
+  animationNameUp: 
+  animationNameDown: 
+  animationNameLeft: 
+  animationNameRight: 
+  isFood: 1
+  cookedVersion: {fileID: 11400000, guid: ad36b153a53cde44ca35bc8a2deed85d, type: 2}

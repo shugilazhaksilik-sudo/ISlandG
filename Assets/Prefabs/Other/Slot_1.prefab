@@ -97,14 +97,15 @@ MonoBehaviour:
   iconField: {fileID: 8212662870704667254}
   amountImage: {fileID: 7462842026725100369}
   numberSprites:
-  - {fileID: 801045932, guid: c106fcbaed3e3df4681cf4040992d7df, type: 3}
-  - {fileID: -1562028881, guid: c106fcbaed3e3df4681cf4040992d7df, type: 3}
-  - {fileID: -1519792357, guid: c106fcbaed3e3df4681cf4040992d7df, type: 3}
-  - {fileID: -1738529618, guid: c106fcbaed3e3df4681cf4040992d7df, type: 3}
+  - {fileID: -1725612351, guid: 40acfedcd9b0d1d43b9b81a143541c65, type: 3}
+  - {fileID: 1175073558, guid: 40acfedcd9b0d1d43b9b81a143541c65, type: 3}
+  - {fileID: 1631673864, guid: 40acfedcd9b0d1d43b9b81a143541c65, type: 3}
+  - {fileID: -1408300926, guid: 40acfedcd9b0d1d43b9b81a143541c65, type: 3}
   highlightFrame: {fileID: 1472920003393453900}
   linkedHotbarSlot: {fileID: 0}
   timerBar: {fileID: 540971804631435980}
   currentLifetime: 0
+  currentDurability: 0
 --- !u!1 &3762764796042831081
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +140,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 3, y: -2}
+  m_AnchoredPosition: {x: 0, y: 1}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &4259863965815895315
