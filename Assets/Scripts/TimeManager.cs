@@ -21,8 +21,8 @@ public class TimeManager : MonoBehaviour
     public Gradient timeColorGradient;
 
     [Header("Storm Tint Settings")]
-    [Tooltip("Цвет затенения во время тропического ливня (грозовые тучи)")]
-    public Color stormTint = new Color(0.11f, 0.11f, 0.15f, 0.45f);
+    [Tooltip("Цвет затенения во время тропического ливня (полупрозрачный серый)")]
+    public Color stormTint = new Color(0.15f, 0.15f, 0.18f, 0.45f);
     [Tooltip("Скорость плавного затенения при дожде (в секундах)")]
     public float weatherFadeDuration = 5f;
 
@@ -76,15 +76,18 @@ public class TimeManager : MonoBehaviour
             Color baseDayNightColor = timeColorGradient.Evaluate(normalizedTime);
             Color finalColor = baseDayNightColor;
 
-            // Если идет дождь, плавно смешиваем дневной/ночной оттенок с темным грозовым
+            // Если идет дождь, плавно переходим в полупрозрачный серый штормовой оттенок
             if (rainTintIntensity > 0f)
             {
-                // Грозовой цвет должен быть достаточно темным, но подстраиваться под ночь
-                float targetAlpha = Mathf.Max(baseDayNightColor.a, stormTint.a);
-                Color activeStormColor = new Color(stormTint.r, stormTint.g, stormTint.b, targetAlpha);
+                // Чтобы избежать эффекта выбеливания, мы принудительно берем темно-серый цвет в качестве
+                // базового для перехода, чтобы плавно нарастала только его прозрачность (Альфа).
+                finalColor.r = Mathf.Lerp(baseDayNightColor.r * 0.15f, stormTint.r, rainTintIntensity);
+                finalColor.g = Mathf.Lerp(baseDayNightColor.g * 0.15f, stormTint.g, rainTintIntensity);
+                finalColor.b = Mathf.Lerp(baseDayNightColor.b * 0.18f, stormTint.b, rainTintIntensity);
 
-                // Плавно смешиваем базовый цвет суток и цвет грозы (на максимум 75% интенсивности, чтобы день/ночь считывались)
-                finalColor = Color.Lerp(baseDayNightColor, activeStormColor, rainTintIntensity * 0.75f);
+                // Альфа плавно нарастает до заданной прозрачности шторма, но сохраняет ночную темноту, если сейчас ночь
+                float targetAlpha = Mathf.Max(baseDayNightColor.a, stormTint.a * rainTintIntensity);
+                finalColor.a = targetAlpha;
             }
 
             screenOverlay.color = finalColor;
