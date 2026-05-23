@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,13 +12,6 @@ public enum CampfireState
 [RequireComponent(typeof(SpriteRenderer))]
 public class Campfire : MonoBehaviour
 {
-    [System.Serializable]
-    public class CookingRecipe
-    {
-        public ItemData rawFood;    // Сырой предмет (например, RawShrimp)
-        public ItemData cookedFood; // Готовый предмет (например, FriedShrimp)
-    }
-
     [Header("Sprites")]
     [Tooltip("Спрайт основы костра (не подожжен)")]
     public Sprite unlitSprite;
@@ -34,10 +27,6 @@ public class Campfire : MonoBehaviour
     public ItemData sparkItem;
     [Tooltip("Предмет Основа Костра (10Fireplace) для возврата при разборке")]
     public ItemData fireplaceItem;
-
-    [Header("Cooking Settings")]
-    [Tooltip("Список рецептов готовки на костре")]
-    public List<CookingRecipe> cookingRecipes = new List<CookingRecipe>();
 
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
@@ -188,10 +177,9 @@ public class Campfire : MonoBehaviour
                 // Жарим пищу
                 if (activeItem != null)
                 {
-                    CookingRecipe match = FindRecipe(activeItem);
-                    if (match != null)
+                    if (activeItem.isFood && activeItem.cookedVersion != null)
                     {
-                        CookFood(activeSlot, match);
+                        CookFood(activeSlot, activeItem.cookedVersion);
                     }
                     else
                     {
@@ -207,17 +195,7 @@ public class Campfire : MonoBehaviour
         }
     }
 
-    private CookingRecipe FindRecipe(ItemData raw)
-    {
-        foreach (var recipe in cookingRecipes)
-        {
-            if (recipe.rawFood == raw)
-                return recipe;
-        }
-        return null;
-    }
-
-    private void CookFood(InventorySlot slot, CookingRecipe recipe)
+    private void CookFood(InventorySlot slot, ItemData cookedFood)
     {
         // Воспроизводим звук шипения/готовки
         if (audioSource != null && cookingSound != null)
@@ -228,11 +206,9 @@ public class Campfire : MonoBehaviour
         // Логика поштучной жарки еды из стака
         if (slot.amount == 1)
         {
-            // Если в активной руке ровно 1 предмет, заменяем его готовым в том же слоте
-            slot.item = recipe.cookedFood;
-            slot.amount = 1;
-            slot.UpdateUI();
-            Debug.Log($"Приготовлено: {recipe.cookedFood.itemName}! Теперь предмет в вашей руке.");
+            // Используем метод AddItem, чтобы полностью перерисовать иконку в руке!
+            slot.AddItem(cookedFood, 1);
+            Debug.Log($"Приготовлено: {cookedFood.itemName}! Теперь предмет в вашей руке.");
         }
         else if (slot.amount > 1)
         {
@@ -241,22 +217,22 @@ public class Campfire : MonoBehaviour
             slot.UpdateUI();
 
             // Добавляем 1 готовую еду в инвентарь
-            bool success = InventoryManager.instance.TryAddItem(recipe.cookedFood);
+            bool success = InventoryManager.instance.TryAddItem(cookedFood);
             if (!success)
             {
                 // Если в инвентаре нет свободного места, готовая еда падает на землю
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 Vector2 spawnPos = (player != null) ? (Vector2)player.transform.position : (Vector2)transform.position;
-                if (recipe.cookedFood.dropPrefab != null)
+                if (cookedFood.dropPrefab != null)
                 {
                     Vector2 randomDir = Random.insideUnitCircle.normalized * 0.8f;
-                    Instantiate(recipe.cookedFood.dropPrefab, spawnPos + randomDir, Quaternion.identity);
+                    Instantiate(cookedFood.dropPrefab, spawnPos + randomDir, Quaternion.identity);
                 }
-                Debug.Log($"Инвентарь полон! Приготовленный {recipe.cookedFood.itemName} выпал на землю.");
+                Debug.Log($"Инвентарь полон! Приготовленный {cookedFood.itemName} выпал на землю.");
             }
             else
             {
-                Debug.Log($"Приготовлено: {recipe.cookedFood.itemName}! 1 шт. добавлена в инвентарь. В руке осталось сырых: {slot.amount}.");
+                Debug.Log($"Приготовлено: {cookedFood.itemName}! 1 шт. добавлена в инвентарь. В руке осталось сырых: {slot.amount}.");
             }
         }
     }

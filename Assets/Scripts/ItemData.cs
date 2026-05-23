@@ -1,35 +1,34 @@
-using UnityEngine;
+п»їusing UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject
 {
     public string itemName;
     public Sprite icon;
-    public GameObject dropPrefab; // Префаб, который появится на земле при выбрасывании
+    public GameObject dropPrefab; // РџСЂРµС„Р°Р± РІС‹Р±СЂРѕС€РµРЅРЅРѕРіРѕ РїСЂРµРґРјРµС‚Р°
 
-    // --- ДОБАВЬ ЭТУ СТРОКУ ---
-    public bool canBeDropped = true; // Галочка: можно ли выбросить предмет клавишей Q или мышкой?
-    // -------------------------
+    public bool canBeDropped = true; // РњРѕР¶РЅРѕ Р»Рё РІС‹Р±СЂРѕСЃРёС‚СЊ
 
-    [Header("Настройки строительства (Размещение)")]
-    public bool isPlaceable;         // Галочка: можно ли это поставить на землю?
-    public GameObject placeablePrefab; // ЧТО именно ставим (например, префаб FirePloughStation)
+    [Header("РЎС‚СЂРѕРёС‚РµР»СЊСЃС‚РІРѕ Рё СЂР°Р·РјРµС‰РµРЅРёРµ")]
+    public bool isPlaceable;         // РњРѕР¶РЅРѕ Р»Рё СЂР°Р·РјРµСЃС‚РёС‚СЊ РЅР° СЃС†РµРЅРµ
+    public GameObject placeablePrefab; // РџСЂРµС„Р°Р± РґР»СЏ СЂР°Р·РјРµС‰РµРЅРёСЏ (РЅР°РїСЂРёРјРµСЂ, РєРѕСЃС‚РµСЂ)
 
-    // --- НОВЫЕ НАСТРОЙКИ ДЛЯ ТАЙМЕРА ---
-    [Header("Настройки времени жизни")]
-    public bool hasLifetime;        // Галочка: есть ли у предмета срок годности (для искры)?
-    public float maxLifetime = 15f; // Сколько секунд он живет?
+    [Header("Р’СЂРµРјСЏ Р¶РёР·РЅРё")]
+    public bool hasLifetime;        // Р•СЃС‚СЊ Р»Рё РІСЂРµРјСЏ Р¶РёР·РЅРё РїСЂРµРґРјРµС‚Р°
+    public float maxLifetime = 15f; // РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РІСЂРµРјСЏ Р¶РёР·РЅРё
 
-    // --- НОВЫЕ СТРОЧКИ ДЛЯ ИНСТРУМЕНТОВ ---
-    [Header("Настройки прочности (Инструменты)")]
-    public bool isTool;             // Галочка: это инструмент?
-    public int maxDurability = 50;  // На сколько ударов его хватает в идеале?
+    [Header("РРЅСЃС‚СЂСѓРјРµРЅС‚ Рё РїСЂРѕС‡РЅРѕСЃС‚СЊ")]
+    public bool isTool;             // РЇРІР»СЏРµС‚СЃСЏ Р»Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРј
+    public int maxDurability = 50;  // РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РїСЂРѕС‡РЅРѕСЃС‚СЊ
 
-    [Header("Гибридная Анимация Инструмента")]
+    [Header("РђРЅРёРјР°С†РёРё РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°")]
     public Sprite sideOverlaySprite;
     public string animationNameUp;
     public string animationNameDown;
-    // --- НОВЫЕ СТРОКИ ---
-    public string animationNameLeft;  // Анимация пустой руки влево
-    public string animationNameRight; // Анимация пустой руки вправо
+    public string animationNameLeft;
+    public string animationNameRight;
+
+    [Header("РЎРІРѕР№СЃС‚РІР° РµРґС‹")]
+    public bool isFood;               // РЇРІР»СЏРµС‚СЃСЏ Р»Рё РїРёС‰РµР№ (СЃС‹СЂРѕР№)
+    public ItemData cookedVersion;    // Р’Рѕ С‡С‚Рѕ РїСЂРµРІСЂР°С‰Р°РµС‚СЃСЏ РїРѕСЃР»Рµ РіРѕС‚РѕРІРєРё
 }
