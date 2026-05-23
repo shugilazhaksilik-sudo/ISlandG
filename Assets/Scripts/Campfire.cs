@@ -29,9 +29,11 @@ public class Campfire : MonoBehaviour
     [Tooltip("Предмет Основа Костра (10Fireplace) для возврата при разборке")]
     public ItemData fireplaceItem;
 
-    [Header("Shelter Settings")]
+    [Header("Shelter & Rain Settings")]
     [Tooltip("Радиус проверки укрытия под большой пальмой (BigPalm)")]
     public float shelterCheckRadius = 1.8f;
+    [Tooltip("Задержка перед тушением костра под ливнем (в секундах)")]
+    public float rainExtinguishDelay = 1.0f;
 
     [Header("Collider Settings")]
     [Tooltip("Размер коллайдера для основы костра (Unlit / Burning)")]
@@ -59,6 +61,7 @@ public class Campfire : MonoBehaviour
     private BoxCollider2D boxCollider;
     private float animTimer;
     private int currentFrameIndex;
+    private float rainExposureTimer = 0f; // Таймер нахождения под дождем
 
     private void Awake()
     {
@@ -98,14 +101,20 @@ public class Campfire : MonoBehaviour
                 }
             }
 
-            // Тушение дождем, если костер не под укрытием большой пальмы
-            if (WeatherManager.instance != null && WeatherManager.instance.IsRaining())
+            // Тушение дождем, если костер не под укрытием большой пальмы, с задержкой
+            if (WeatherManager.instance != null && WeatherManager.instance.IsRaining() && !IsShelteredByBigPalm())
             {
-                if (!IsShelteredByBigPalm())
+                rainExposureTimer += Time.deltaTime;
+                if (rainExposureTimer >= rainExtinguishDelay)
                 {
-                    Debug.Log("Костер потух под дождем!");
+                    Debug.Log("Костер потух под усилившимся дождем!");
                     Extinguish();
+                    rainExposureTimer = 0f;
                 }
+            }
+            else
+            {
+                rainExposureTimer = 0f; // Сбрасываем таймер, если дождь кончился или костер укрыли
             }
         }
     }
@@ -115,6 +124,7 @@ public class Campfire : MonoBehaviour
         currentState = newState;
         animTimer = 0f;
         currentFrameIndex = 0;
+        rainExposureTimer = 0f;
 
         switch (currentState)
         {
