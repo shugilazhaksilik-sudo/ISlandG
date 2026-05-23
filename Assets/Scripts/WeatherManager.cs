@@ -23,15 +23,19 @@ public class WeatherManager : MonoBehaviour
     public float weatherCheckInterval = 60f;
 
     [Header("Fade Settings")]
-    [Tooltip("Длительность плавного перехода звука (нарастание / затухание) в секундах")]
-    public float fadeDuration = 3f;
+    [Tooltip("Длительность плавного перехода звука и дождя (нарастание / затухание) в секундах")]
+    public float fadeDuration = 5f;
     [Tooltip("Максимальная громкость звука ливня")]
     [Range(0f, 1f)]
     public float maxVolume = 0.5f;
+    [Tooltip("Максимальное количество капель дождя в секунду")]
+    public float maxEmissionRate = 450f;
 
     private bool isRaining = false;
     private float weatherTimer;
-    private Coroutine fadeCoroutine;
+    
+    private Coroutine audioFadeCoroutine;
+    private Coroutine particleFadeCoroutine;
 
     private void Awake()
     {
@@ -40,13 +44,21 @@ public class WeatherManager : MonoBehaviour
 
     private void Start()
     {
-        // Устанавливаем громкость в 0 и выключаем в начале игры
+        // Инициализируем звук и частицы в выключенном состоянии
         if (rainAudioSource != null)
         {
             rainAudioSource.volume = 0f;
             rainAudioSource.Stop();
         }
-        StopRain();
+
+        if (rainParticles != null)
+        {
+            var emission = rainParticles.emission;
+            emission.rateOverTime = 0f;
+            rainParticles.Stop();
+        }
+
+        isRaining = false;
         weatherTimer = weatherCheckInterval;
     }
 
@@ -85,51 +97,63 @@ public class WeatherManager : MonoBehaviour
         StopRain();
     }
 
-    // Включение дождя с плавным нарастанием звука
+    // Включение дождя с плавным нарастанием звука и капель
     public void StartRain()
     {
         isRaining = true;
+
         if (rainParticles != null)
         {
             rainParticles.Play();
+            if (particleFadeCoroutine != null)
+            {
+                StopCoroutine(particleFadeCoroutine);
+            }
+            particleFadeCoroutine = StartCoroutine(FadeParticles(maxEmissionRate, fadeDuration));
         }
 
         if (rainAudioSource != null)
         {
-            if (fadeCoroutine != null)
+            if (audioFadeCoroutine != null)
             {
-                StopCoroutine(fadeCoroutine);
+                StopCoroutine(audioFadeCoroutine);
             }
-            fadeCoroutine = StartCoroutine(FadeAudio(rainAudioSource, maxVolume, fadeDuration));
+            audioFadeCoroutine = StartCoroutine(FadeAudio(maxVolume, fadeDuration));
         }
 
-        Debug.Log("Начался сильный тропический ливень с плавным нарастанием звука!");
+        Debug.Log("Начался ливень с плавным нарастанием звука и капель!");
     }
 
-    // Выключение дождя с плавным затуханием звука
+    // Выключение дождя с плавным затуханием звука и капель
     public void StopRain()
     {
         isRaining = false;
+
         if (rainParticles != null)
         {
-            rainParticles.Stop();
+            if (particleFadeCoroutine != null)
+            {
+                StopCoroutine(particleFadeCoroutine);
+            }
+            particleFadeCoroutine = StartCoroutine(FadeParticlesAndStop(0f, fadeDuration));
         }
 
         if (rainAudioSource != null)
         {
-            if (fadeCoroutine != null)
+            if (audioFadeCoroutine != null)
             {
-                StopCoroutine(fadeCoroutine);
+                StopCoroutine(audioFadeCoroutine);
             }
-            fadeCoroutine = StartCoroutine(FadeAudioAndStop(rainAudioSource, 0f, fadeDuration));
+            audioFadeCoroutine = StartCoroutine(FadeAudioAndStop(0f, fadeDuration));
         }
 
-        Debug.Log("Дождь закончился с плавным затуханием звука.");
+        Debug.Log("Ливень закончился с плавным затуханием звука и капель.");
     }
 
-    // Корутина для плавного нарастания громкости
-    private IEnumerator FadeAudio(AudioSource source, float targetVolume, float duration)
+    // Корутина для плавного нарастания/затухания громкости
+    private IEnumerator FadeAudio(float targetVolume, float duration)
     {
+        AudioSource source = rainAudioSource;
         if (!source.isPlaying)
         {
             source.volume = 0f;
@@ -150,8 +174,9 @@ public class WeatherManager : MonoBehaviour
     }
 
     // Корутина для плавного затухания громкости и последующей остановки
-    private IEnumerator FadeAudioAndStop(AudioSource source, float targetVolume, float duration)
+    private IEnumerator FadeAudioAndStop(float targetVolume, float duration)
     {
+        AudioSource source = rainAudioSource;
         float startVolume = source.volume;
         float elapsed = 0f;
 
@@ -164,5 +189,42 @@ public class WeatherManager : MonoBehaviour
 
         source.volume = targetVolume;
         source.Stop();
+    }
+
+    // Корутина для плавного изменения количества частиц
+    private IEnumerator FadeParticles(float targetRate, float duration)
+    {
+        var emission = rainParticles.emission;
+        float startRate = emission.rateOverTime.constant;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float currentRate = Mathf.Lerp(startRate, targetRate, elapsed / duration);
+            emission.rateOverTime = currentRate;
+            yield return null;
+        }
+
+        emission.rateOverTime = targetRate;
+    }
+
+    // Корутина для затухания частиц и последующей остановки системы
+    private IEnumerator FadeParticlesAndStop(float targetRate, float duration)
+    {
+        var emission = rainParticles.emission;
+        float startRate = emission.rateOverTime.constant;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float currentRate = Mathf.Lerp(startRate, targetRate, elapsed / duration);
+            emission.rateOverTime = currentRate;
+            yield return null;
+        }
+
+        emission.rateOverTime = targetRate;
+        rainParticles.Stop();
     }
 }
