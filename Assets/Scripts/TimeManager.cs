@@ -20,7 +20,14 @@ public class TimeManager : MonoBehaviour
     [Tooltip("Градиент цвета суток (Утро, День, Вечер, Ночь)")]
     public Gradient timeColorGradient;
 
+    [Header("Storm Tint Settings")]
+    [Tooltip("Цвет затенения во время тропического ливня (грозовые тучи)")]
+    public Color stormTint = new Color(0.11f, 0.11f, 0.15f, 0.45f);
+    [Tooltip("Скорость плавного затенения при дожде (в секундах)")]
+    public float weatherFadeDuration = 5f;
+
     private int currentDay = 1;
+    private float rainTintIntensity = 0f;
 
     private void Awake()
     {
@@ -52,6 +59,11 @@ public class TimeManager : MonoBehaviour
             ExtinguishAllCampfires();
         }
 
+        // --- Управление плавным затемнением от дождя ---
+        bool isRaining = (WeatherManager.instance != null && WeatherManager.instance.IsRaining());
+        float targetIntensity = isRaining ? 1f : 0f;
+        rainTintIntensity = Mathf.MoveTowards(rainTintIntensity, targetIntensity, Time.deltaTime / weatherFadeDuration);
+
         // Обновляем визуальный оттенок на экране
         UpdateOverlayColor();
     }
@@ -61,14 +73,27 @@ public class TimeManager : MonoBehaviour
         if (screenOverlay != null && timeColorGradient != null)
         {
             float normalizedTime = currentTimeOfDay / 24f;
-            screenOverlay.color = timeColorGradient.Evaluate(normalizedTime);
+            Color baseDayNightColor = timeColorGradient.Evaluate(normalizedTime);
+            Color finalColor = baseDayNightColor;
+
+            // Если идет дождь, плавно смешиваем дневной/ночной оттенок с темным грозовым
+            if (rainTintIntensity > 0f)
+            {
+                // Грозовой цвет должен быть достаточно темным, но подстраиваться под ночь
+                float targetAlpha = Mathf.Max(baseDayNightColor.a, stormTint.a);
+                Color activeStormColor = new Color(stormTint.r, stormTint.g, stormTint.b, targetAlpha);
+
+                // Плавно смешиваем базовый цвет суток и цвет грозы (на максимум 75% интенсивности, чтобы день/ночь считывались)
+                finalColor = Color.Lerp(baseDayNightColor, activeStormColor, rainTintIntensity * 0.75f);
+            }
+
+            screenOverlay.color = finalColor;
         }
     }
 
     // Метод, гасящий все активные костры в мире
     public void ExtinguishAllCampfires()
     {
-        // Создаем копию списка, чтобы избежать изменения коллекции во время перебора
         foreach (Campfire fire in new List<Campfire>(Campfire.activeCampfires))
         {
             if (fire.IsBurning())
