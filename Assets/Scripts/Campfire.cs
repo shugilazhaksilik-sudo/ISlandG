@@ -10,6 +10,7 @@ public enum CampfireState
 }
 
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class Campfire : MonoBehaviour
 {
     [Header("Sprites")]
@@ -32,6 +33,17 @@ public class Campfire : MonoBehaviour
     [Tooltip("Радиус проверки укрытия под большой пальмой (BigPalm)")]
     public float shelterCheckRadius = 1.8f;
 
+    [Header("Collider Settings")]
+    [Tooltip("Размер коллайдера для основы костра (Unlit / Burning)")]
+    public Vector2 normalColliderSize = new Vector2(1f, 1f);
+    [Tooltip("Смещение коллайдера для основы костра")]
+    public Vector2 normalColliderOffset = new Vector2(0f, 0f);
+
+    [Tooltip("Размер коллайдера для потухшего костра (Extinguished)")]
+    public Vector2 extinguishedColliderSize = new Vector2(1.5f, 1.5f);
+    [Tooltip("Смещение коллайдера для потухшего костра")]
+    public Vector2 extinguishedColliderOffset = new Vector2(0f, 0f);
+
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
     public AudioClip igniteSound;
@@ -44,12 +56,14 @@ public class Campfire : MonoBehaviour
 
     private CampfireState currentState = CampfireState.Unlit;
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D boxCollider;
     private float animTimer;
     private int currentFrameIndex;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void OnEnable()
@@ -107,11 +121,21 @@ public class Campfire : MonoBehaviour
             case CampfireState.Unlit:
                 if (unlitSprite != null)
                     spriteRenderer.sprite = unlitSprite;
+                if (boxCollider != null)
+                {
+                    boxCollider.size = normalColliderSize;
+                    boxCollider.offset = normalColliderOffset;
+                }
                 if (audioSource != null)
                     audioSource.Stop();
                 break;
 
             case CampfireState.Burning:
+                if (boxCollider != null)
+                {
+                    boxCollider.size = normalColliderSize;
+                    boxCollider.offset = normalColliderOffset;
+                }
                 if (audioSource != null && cracklingSound != null)
                 {
                     audioSource.clip = cracklingSound;
@@ -127,6 +151,11 @@ public class Campfire : MonoBehaviour
             case CampfireState.Extinguished:
                 if (extinguishedSprite != null)
                     spriteRenderer.sprite = extinguishedSprite;
+                if (boxCollider != null)
+                {
+                    boxCollider.size = extinguishedColliderSize;
+                    boxCollider.offset = extinguishedColliderOffset;
+                }
                 if (audioSource != null)
                 {
                     audioSource.Stop();
