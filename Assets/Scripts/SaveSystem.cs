@@ -7,7 +7,7 @@ public class SaveSystem : MonoBehaviour
     public static SaveSystem instance;
 
     [Header("Database")]
-    [Tooltip("Список всех ItemData предметов в игре для сопоставления при загрузке")]
+    [Tooltip("Список всех ItemData предметов в игре (заполняется автоматически в редакторе!)")]
     public List<ItemData> itemDatabase = new List<ItemData>();
 
     private string saveFilePath;
@@ -15,8 +15,26 @@ public class SaveSystem : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        // Путь к файлу сохранения в зависимости от ОС (для Windows: AppData/LocalLow/...)
         saveFilePath = Path.Combine(Application.persistentDataPath, "savegame.json");
+    }
+
+    private void Start()
+    {
+        #if UNITY_EDITOR
+        // Автоматически находим все предметы ItemData в проекте, чтобы избавить вас от ручного перетаскивания!
+        string[] guids = UnityEditor.AssetDatabase.FindAssets("t:ItemData");
+        itemDatabase.Clear();
+        foreach (string guid in guids)
+        {
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            ItemData item = UnityEditor.AssetDatabase.LoadAssetAtPath<ItemData>(path);
+            if (item != null && !itemDatabase.Contains(item))
+            {
+                itemDatabase.Add(item);
+            }
+        }
+        Debug.Log($"[SaveSystem] База данных сохранений автоматически заполнена! Найдено предметов в проекте: {itemDatabase.Count}");
+        #endif
     }
 
     private void Update()
@@ -37,7 +55,7 @@ public class SaveSystem : MonoBehaviour
     {
         GameSaveData saveData = new GameSaveData();
 
-        // 1. Сохраняем время суток и день
+        // 1. Сохраняем время суток
         if (TimeManager.instance != null)
         {
             saveData.currentTimeOfDay = TimeManager.instance.currentTimeOfDay;
@@ -165,27 +183,4 @@ public class SaveSystem : MonoBehaviour
         }
         return null;
     }
-}
-
-[System.Serializable]
-public class SlotSaveData
-{
-    public string itemName;
-    public int amount;
-    public float currentLifetime;
-    public int currentDurability;
-}
-
-[System.Serializable]
-public class GameSaveData
-{
-    public int currentDay;
-    public float currentTimeOfDay;
-    public float playerX;
-    public float playerY;
-    public float health;
-    public float hunger;
-    public float thirst;
-    public float cold;
-    public List<SlotSaveData> inventorySlots = new List<SlotSaveData>();
 }
