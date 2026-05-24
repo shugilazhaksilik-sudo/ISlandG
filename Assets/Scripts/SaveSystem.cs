@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -183,4 +183,27 @@ public class SaveSystem : MonoBehaviour
         }
         return null;
     }
+}
+
+[System.Serializable]
+public class SlotSaveData
+{
+    public string itemName;
+    public int amount;
+    public float currentLifetime;
+    public int currentDurability;
+}
+
+[System.Serializable]
+public class GameSaveData
+{
+    public int currentDay;
+    public float currentTimeOfDay;
+    public float playerX;
+    public float playerY;
+    public float health;
+    public float hunger;
+    public float thirst;
+    public float cold;
+    public List<SlotSaveData> inventorySlots = new List<SlotSaveData>();
 }
