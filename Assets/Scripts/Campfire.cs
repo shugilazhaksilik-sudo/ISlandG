@@ -46,6 +46,10 @@ public class Campfire : MonoBehaviour
     [Tooltip("Смещение коллайдера для потухшего костра")]
     public Vector2 extinguishedColliderOffset = new Vector2(0f, 0f);
 
+    [Header("Damage Settings")]
+    [Tooltip("Урон в секунду, если игрок наступает прямо на горящий костер")]
+    public float burnDamage = 15f;
+
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
     public AudioClip igniteSound;
@@ -115,6 +119,20 @@ public class Campfire : MonoBehaviour
             else
             {
                 rainExposureTimer = 0f; // Сбрасываем таймер, если дождь кончился или костер укрыли
+            }
+
+            // Нанесение урона игроку, если он встает прямо поверх огня (дистанция < 0.6 метров)
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                float dist = Vector2.Distance(transform.position, player.transform.position);
+                if (dist < 0.6f)
+                {
+                    if (SurvivalSystem.instance != null)
+                    {
+                        SurvivalSystem.instance.TakeDamage(burnDamage * Time.deltaTime);
+                    }
+                }
             }
         }
     }

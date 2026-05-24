@@ -166,6 +166,12 @@ public class SurvivalSystem : MonoBehaviour
         if (coldSlider != null)   coldSlider.value = currentCold;
     }
 
+    // Получение урона (вызывается извне, например, при стоянии на костре)
+    public void TakeDamage(float amount)
+    {
+        currentHealth = Mathf.Max(0f, currentHealth - amount);
+    }
+
     public bool IsNearBurningCampfire()
     {
         foreach (Campfire fire in Campfire.activeCampfires)
