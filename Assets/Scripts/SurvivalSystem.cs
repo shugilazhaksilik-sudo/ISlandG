@@ -73,32 +73,6 @@ public class SurvivalSystem : MonoBehaviour
         if (hungerSlider != null) { hungerSlider.minValue = 0; hungerSlider.maxValue = maxHunger; }
         if (thirstSlider != null) { thirstSlider.minValue = 0; thirstSlider.maxValue = maxThirst; }
         if (coldSlider != null)   { coldSlider.minValue = 0;   coldSlider.maxValue = maxCold; }
-
-        #if UNITY_EDITOR
-        // Автоматически привязываем AudioSource
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                audioSource = gameObject.AddComponent<AudioSource>();
-            }
-        }
-
-        // Автоматически подтягиваем аудиоклипы, чтобы избавить от ручной настройки в инспекторе!
-        if (eatingSound == null)
-        {
-            eatingSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/eat.wav");
-        }
-        if (genericHurtSound == null)
-        {
-            genericHurtSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/hpminus.mp3");
-        }
-        if (fireHurtSound == null)
-        {
-            fireHurtSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/burningMan.mp3");
-        }
-        #endif
     }
 
     private void Update()
