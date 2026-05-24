@@ -31,4 +31,9 @@ public class ItemData : ScriptableObject
     [Header("Свойства еды")]
     public bool isFood;               // Является ли пищей (сырой)
     public ItemData cookedVersion;    // Во что превращается после готовки
+
+    [Header("Пищевая ценность")]
+    public float hungerRestoreValue = 20f;   // Сколько восстанавливает еды
+    public float thirstRestoreValue = 0f;    // Сколько восстанавливает воды
+    public float healthRestoreValue = 5f;    // Сколько восстанавливает здоровья
 }

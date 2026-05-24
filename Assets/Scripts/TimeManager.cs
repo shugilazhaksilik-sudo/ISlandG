@@ -52,11 +52,13 @@ public class TimeManager : MonoBehaviour
         if (prevTime < 6f && currentTimeOfDay >= 6f)
         {
             ExtinguishAllCampfires();
+            AutoSave();
         }
         // Если время проскочило (например, при быстром перемотке времени с вечера на утро при сне)
         else if (prevTime > currentTimeOfDay && currentTimeOfDay >= 6f && prevTime < 24f)
         {
             ExtinguishAllCampfires();
+            AutoSave();
         }
 
         // --- Управление плавным затемнением от дождя ---
@@ -105,5 +107,15 @@ public class TimeManager : MonoBehaviour
             }
         }
         Debug.Log("Утро наступило! Все костры потухли.");
+    }
+
+    // Автоматическое сохранение утром
+    private void AutoSave()
+    {
+        if (SaveSystem.instance != null)
+        {
+            SaveSystem.instance.SaveGame();
+            Debug.Log("Утреннее автосохранение успешно выполнено!");
+        }
     }
 }
