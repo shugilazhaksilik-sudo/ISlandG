@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,6 +49,8 @@ public class Campfire : MonoBehaviour
     [Header("Damage Settings")]
     [Tooltip("Урон в секунду, если игрок наступает прямо на горящий костер")]
     public float burnDamage = 15f;
+    [Tooltip("Максимальная дистанция от центра костра для нанесения урона")]
+    public float burnRadius = 0.4f;
 
     [Header("Audio (Optional)")]
     public AudioSource audioSource;
@@ -121,16 +123,16 @@ public class Campfire : MonoBehaviour
                 rainExposureTimer = 0f; // Сбрасываем таймер, если дождь кончился или костер укрыли
             }
 
-            // Нанесение урона игроку, если он встает прямо поверх огня (дистанция < 0.6 метров)
+            // Нанесение урона игроку, если он встает прямо поверх огня (дистанция < burnRadius)
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
                 float dist = Vector2.Distance(transform.position, player.transform.position);
-                if (dist < 0.6f)
+                if (dist < burnRadius)
                 {
                     if (SurvivalSystem.instance != null)
                     {
-                        SurvivalSystem.instance.TakeDamage(burnDamage * Time.deltaTime);
+                        SurvivalSystem.instance.TakeDamage(burnDamage * Time.deltaTime, DamageType.Fire);
                     }
                 }
             }

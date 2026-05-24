@@ -1,5 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
+
+public enum DamageType
+{
+    Generic,
+    Starvation,
+    Dehydration,
+    Freezing,
+    Fire
+}
 
 public class SurvivalSystem : MonoBehaviour
 {
@@ -36,9 +45,15 @@ public class SurvivalSystem : MonoBehaviour
     public Slider thirstSlider;
     public Slider coldSlider;
 
-    [Header("Audio")]
+    [Header("Audio Clips")]
     public AudioSource audioSource;
-    public AudioClip eatingSound; // Звук хруста/жевания
+    public AudioClip eatingSound;          // Звук хруста/жевания
+    public AudioClip genericHurtSound;     // Звук обычного урона (голод, жажда, мороз)
+    public AudioClip fireHurtSound;        // Звук шипения ожога от огня костра
+    [Tooltip("Задержка между звуками получения урона в секундах")]
+    public float hurtSoundCooldown = 0.8f;
+
+    private float hurtSoundTimer = 0f;
 
     private void Awake()
     {
@@ -58,10 +73,42 @@ public class SurvivalSystem : MonoBehaviour
         if (hungerSlider != null) { hungerSlider.minValue = 0; hungerSlider.maxValue = maxHunger; }
         if (thirstSlider != null) { thirstSlider.minValue = 0; thirstSlider.maxValue = maxThirst; }
         if (coldSlider != null)   { coldSlider.minValue = 0;   coldSlider.maxValue = maxCold; }
+
+        #if UNITY_EDITOR
+        // Автоматически привязываем AudioSource
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
+
+        // Автоматически подтягиваем аудиоклипы, чтобы избавить от ручной настройки в инспекторе!
+        if (eatingSound == null)
+        {
+            eatingSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/eat.wav");
+        }
+        if (genericHurtSound == null)
+        {
+            genericHurtSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/hpminus.mp3");
+        }
+        if (fireHurtSound == null)
+        {
+            fireHurtSound = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/burningMan.mp3");
+        }
+        #endif
     }
 
     private void Update()
     {
+        // Таймер кулдауна звуков урона
+        if (hurtSoundTimer > 0f)
+        {
+            hurtSoundTimer -= Time.deltaTime;
+        }
+
         // 1. Падение голода и жажды со временем
         currentHunger = Mathf.Max(0f, currentHunger - hungerDecreaseRate * Time.deltaTime);
         currentThirst = Mathf.Max(0f, currentThirst - thirstDecreaseRate * Time.deltaTime);
@@ -118,15 +165,15 @@ public class SurvivalSystem : MonoBehaviour
     {
         if (currentHunger <= 0f)
         {
-            currentHealth = Mathf.Max(0f, currentHealth - starvationDamageRate * Time.deltaTime);
+            TakeDamage(starvationDamageRate * Time.deltaTime, DamageType.Starvation);
         }
         if (currentThirst <= 0f)
         {
-            currentHealth = Mathf.Max(0f, currentHealth - thirstDamageRate * Time.deltaTime);
+            TakeDamage(thirstDamageRate * Time.deltaTime, DamageType.Dehydration);
         }
         if (currentCold >= maxCold)
         {
-            currentHealth = Mathf.Max(0f, currentHealth - coldDamageRate * Time.deltaTime);
+            TakeDamage(coldDamageRate * Time.deltaTime, DamageType.Freezing);
         }
     }
 
@@ -166,10 +213,36 @@ public class SurvivalSystem : MonoBehaviour
         if (coldSlider != null)   coldSlider.value = currentCold;
     }
 
-    // Получение урона (вызывается извне, например, при стоянии на костре)
-    public void TakeDamage(float amount)
+    // Получение урона (с типом урона)
+    public void TakeDamage(float amount, DamageType damageType = DamageType.Generic)
     {
         currentHealth = Mathf.Max(0f, currentHealth - amount);
+
+        // Проигрываем звук урона с учетом задержки
+        if (hurtSoundTimer <= 0f && amount > 0f)
+        {
+            PlayHurtSound(damageType);
+            hurtSoundTimer = hurtSoundCooldown; // Включаем задержку
+        }
+    }
+
+    // Определение и проигрывание звука в зависимости от типа урона
+    private void PlayHurtSound(DamageType type)
+    {
+        if (audioSource == null) return;
+
+        if (type == DamageType.Fire)
+        {
+            if (fireHurtSound != null)
+                audioSource.PlayOneShot(fireHurtSound);
+            else if (genericHurtSound != null)
+                audioSource.PlayOneShot(genericHurtSound);
+        }
+        else
+        {
+            if (genericHurtSound != null)
+                audioSource.PlayOneShot(genericHurtSound);
+        }
     }
 
     public bool IsNearBurningCampfire()
