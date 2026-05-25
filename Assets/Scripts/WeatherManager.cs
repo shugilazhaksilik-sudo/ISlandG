@@ -187,6 +187,12 @@ public class WeatherManager : MonoBehaviour
     public void StartRain()
     {
         isRaining = true;
+        lightningCooldownTimer = minLightningCooldown; // Задаем кулдаун сразу при старте дождя, чтобы молния не била мгновенно!
+
+        if (TimeManager.instance != null)
+        {
+            TimeManager.instance.lightningIntensity = 0f; // Убеждаемся, что интенсивность вспышки сброшена
+        }
 
         if (rainParticles != null)
         {

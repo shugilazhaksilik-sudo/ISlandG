@@ -201,7 +201,7 @@ public class SurvivalSystem : MonoBehaviour
             // Для обычного урона оставляем стандартную задержку (0.8с).
             if (damageType == DamageType.Fire && fireHurtSound != null)
             {
-                hurtSoundTimer = fireHurtSound.length;
+                hurtSoundTimer = fireHurtSound.length + 0.4f; // Добавили небольшую паузу 0.4 сек, чтобы звук не был слишком резким
             }
             else
             {
