@@ -179,10 +179,10 @@ public class InventoryManager : MonoBehaviour
         Item itemScript = dropped.GetComponent<Item>();
         if (itemScript != null) itemScript.currentDurability = slot.currentDurability;
 
-        // Воспроизводим звук выбрасывания
+        // Воспроизводим звук выбрасывания через AudioManager
         if (dropSound != null)
         {
-            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
+            AudioManager.PlayPlayerSFX(dropSound, player.transform.position);
         }
 
         slot.amount--;
@@ -206,10 +206,10 @@ public class InventoryManager : MonoBehaviour
             if (itemScript != null) itemScript.currentDurability = slot.currentDurability;
         }
 
-        // Воспроизводим звук выбрасывания
+        // Воспроизводим звук выбрасывания через AudioManager
         if (dropSound != null)
         {
-            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
+            AudioManager.PlayPlayerSFX(dropSound, player.transform.position);
         }
 
         slot.ClearSlot();
@@ -230,10 +230,10 @@ public class InventoryManager : MonoBehaviour
             if (itemScript != null) itemScript.currentDurability = draggedDurability;
         }
 
-        // Воспроизводим звук выбрасывания
+        // Воспроизводим звук выбрасывания через AudioManager
         if (dropSound != null)
         {
-            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
+            AudioManager.PlayPlayerSFX(dropSound, player.transform.position);
         }
 
         draggedItem = null;

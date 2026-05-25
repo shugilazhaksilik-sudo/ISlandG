@@ -15,3 +15,20 @@ MonoBehaviour:
   itemName: "\u041F\u043E\u043B\u043E\u0432\u0438\u043D\u0430 \u043A\u043E\u043A\u043E\u0441\u0430"
   icon: {fileID: -923253401, guid: df54a4de1b219a54dbfe575298b83477, type: 3}
   dropPrefab: {fileID: 993554218204151198, guid: 541426e299694c349885c47416e301de, type: 3}
+  canBeDropped: 1
+  isPlaceable: 0
+  placeablePrefab: {fileID: 0}
+  hasLifetime: 0
+  maxLifetime: 15
+  isTool: 0
+  maxDurability: 50
+  sideOverlaySprite: {fileID: 0}
+  animationNameUp: 
+  animationNameDown: 
+  animationNameLeft: 
+  animationNameRight: 
+  isFood: 1
+  cookedVersion: {fileID: 0}
+  hungerRestoreValue: 20
+  thirstRestoreValue: 10
+  healthRestoreValue: 0

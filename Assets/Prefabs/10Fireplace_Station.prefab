@@ -117,6 +117,7 @@ MonoBehaviour:
   extinguishedColliderSize: {x: 0.9, y: 0.8}
   extinguishedColliderOffset: {x: 0, y: -0.1}
   burnDamage: 10
+  burnRadius: 0.4
   audioSource: {fileID: 4012539435627431543}
   igniteSound: {fileID: 8300000, guid: bbd51483f15519247a864806ab3af217, type: 3}
   cracklingSound: {fileID: 8300000, guid: 5a669f4b8000e5f4c9c6bb739ed78069, type: 3}
@@ -221,7 +222,7 @@ AudioSource:
   m_GameObject: {fileID: 993554218204151198}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 568912516595476260, guid: 02e96a9c96db2e849abf98acc0722605, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1

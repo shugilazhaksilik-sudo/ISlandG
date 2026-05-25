@@ -29,3 +29,6 @@ MonoBehaviour:
   animationNameRight: 
   isFood: 1
   cookedVersion: {fileID: 11400000, guid: be793313ed3116649af6d6ff674a0087, type: 2}
+  hungerRestoreValue: 10
+  thirstRestoreValue: -20
+  healthRestoreValue: -10

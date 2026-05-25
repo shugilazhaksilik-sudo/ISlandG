@@ -42,7 +42,7 @@ public class PlayerPicker : MonoBehaviour
                 // Воспроизводим звук подбора
                 if (pickUpSound != null)
                 {
-                    AudioSource.PlayClipAtPoint(pickUpSound, transform.position);
+                    AudioManager.PlayPlayerSFX(pickUpSound, transform.position);
                 }
 
                 // Если место было и предмет добавился — удаляем его с земли

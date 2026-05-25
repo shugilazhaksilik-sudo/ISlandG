@@ -200,3 +200,7 @@ MonoBehaviour:
   bonusDropChance: 30
   minBonusAmount: 1
   maxBonusAmount: 2
+  destroySounds:
+  - {fileID: 8300000, guid: 4a03e0405333a164280f11e0e9092016, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: e2a2193202ad0ca4b80aa3b50691a8b4, type: 3}
