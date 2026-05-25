@@ -12,6 +12,10 @@ public class InventoryManager : MonoBehaviour
     [Tooltip("Панель быстрого доступа (Hotbar)")]
     public GameObject hotbarPanel;
 
+    [Header("Audio Settings")]
+    [Tooltip("Звук выбрасывания предметов")]
+    public AudioClip dropSound;
+
     public InventorySlot[] allSlots;
     public int selectedSlotIndex = 0;
 
@@ -175,6 +179,12 @@ public class InventoryManager : MonoBehaviour
         Item itemScript = dropped.GetComponent<Item>();
         if (itemScript != null) itemScript.currentDurability = slot.currentDurability;
 
+        // Воспроизводим звук выбрасывания
+        if (dropSound != null)
+        {
+            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
+        }
+
         slot.amount--;
 
         if (slot.amount <= 0) slot.ClearSlot();
@@ -196,6 +206,12 @@ public class InventoryManager : MonoBehaviour
             if (itemScript != null) itemScript.currentDurability = slot.currentDurability;
         }
 
+        // Воспроизводим звук выбрасывания
+        if (dropSound != null)
+        {
+            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
+        }
+
         slot.ClearSlot();
     }
 
@@ -212,6 +228,12 @@ public class InventoryManager : MonoBehaviour
             GameObject dropped = SpawnPhysicalItem(draggedItem.dropPrefab, player.transform.position);
             Item itemScript = dropped.GetComponent<Item>();
             if (itemScript != null) itemScript.currentDurability = draggedDurability;
+        }
+
+        // Воспроизводим звук выбрасывания
+        if (dropSound != null)
+        {
+            AudioSource.PlayClipAtPoint(dropSound, player.transform.position);
         }
 
         draggedItem = null;
