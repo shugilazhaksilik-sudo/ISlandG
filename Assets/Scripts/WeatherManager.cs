@@ -120,14 +120,14 @@ public class WeatherManager : MonoBehaviour
         // 1. Вспышка молнии (двойная вспышка для максимальной реалистичности!)
         if (TimeManager.instance != null)
         {
-            // Первая вспышка (более мягкая, прозрачная)
-            TimeManager.instance.lightningIntensity = 0.4f;
+            // Первая вспышка (RGB стремится к белому на 80%, альфа ограничивается в TimeManager)
+            TimeManager.instance.lightningIntensity = 0.8f;
             yield return new WaitForSeconds(0.05f);
-            TimeManager.instance.lightningIntensity = 0.05f;
+            TimeManager.instance.lightningIntensity = 0.1f;
             yield return new WaitForSeconds(0.05f);
 
-            // Вторая вспышка (максимум до 0.5f для приятной прозрачности)
-            TimeManager.instance.lightningIntensity = 0.5f;
+            // Вторая вспышка (RGB на 100% становится белым, альфа ограничивается до 0.4f в TimeManager)
+            TimeManager.instance.lightningIntensity = 1.0f;
             yield return new WaitForSeconds(0.15f);
 
             // Плавное угасание вспышки
@@ -136,7 +136,7 @@ public class WeatherManager : MonoBehaviour
             while (elapsed < flashFadeDuration)
             {
                 elapsed += Time.deltaTime;
-                TimeManager.instance.lightningIntensity = Mathf.Lerp(0.5f, 0f, elapsed / flashFadeDuration);
+                TimeManager.instance.lightningIntensity = Mathf.Lerp(1.0f, 0f, elapsed / flashFadeDuration);
                 yield return null;
             }
             TimeManager.instance.lightningIntensity = 0f;

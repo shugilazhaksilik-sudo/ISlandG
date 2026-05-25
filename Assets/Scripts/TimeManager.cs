@@ -94,11 +94,18 @@ public class TimeManager : MonoBehaviour
                 float targetAlpha = Mathf.Max(baseDayNightColor.a, stormTint.a * rainTintIntensity);
                 finalColor.a = targetAlpha;
             }
-
             // Вспышка молнии временно выбеливает экран
             if (lightningIntensity > 0f)
             {
-                finalColor = Color.Lerp(finalColor, Color.white, lightningIntensity);
+                // Для того чтобы вспышка оставалась ярко-белой (а не грязной/серой), 
+                // мы плавно переводим все цветовые каналы RGB к 1f (чисто белому цвету).
+                finalColor.r = Mathf.Lerp(finalColor.r, 1f, lightningIntensity);
+                finalColor.g = Mathf.Lerp(finalColor.g, 1f, lightningIntensity);
+                finalColor.b = Mathf.Lerp(finalColor.b, 1f, lightningIntensity);
+
+                // Ограничиваем максимальную плотность/альфу вспышки до 0.4f, 
+                // чтобы она была мягкой, полупрозрачной и не слепила игрока сплошным белым цветом.
+                finalColor.a = Mathf.Lerp(finalColor.a, 0.4f, lightningIntensity);
             }
 
             screenOverlay.color = finalColor;
