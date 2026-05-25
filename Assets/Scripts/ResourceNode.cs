@@ -2,28 +2,32 @@ using UnityEngine;
 
 public class ResourceNode : MonoBehaviour
 {
-    [Header("Õ‡ÒÚÓÈÍË ‰Ó·˚˜Ë")]
-    [Tooltip("—ÍÓÎ¸ÍÓ Û‰‡Ó‚ ÌÛÊÌÓ ‰Îˇ ‡ÁÛ¯ÂÌËˇ ˝ÚÓ„Ó Ó·˙ÂÍÚ‡")]
+    [Header("–ù–∞—Å—Ç—Ä–æ–π–∫–∏ –¥–æ–±—ã—á–∏")]
+    [Tooltip("–°–∫–æ–ª—å–∫–æ —É–¥–∞—Ä–æ–≤ –Ω—É–∂–Ω–æ –¥–ª—è —Ä–∞–∑—Ä—É—à–µ–Ω–∏—è —ç—Ç–æ–≥–æ –æ–±—ä–µ–∫—Ç–∞")]
     public int hitsToDestroy = 3;
-    [Tooltip("«‡‰ÂÊÍ‡ ÏÂÊ‰Û Û‰‡‡ÏË (‚ ÒÂÍÛÌ‰‡ı)")]
+    [Tooltip("–ó–∞–¥–µ—Ä–∂–∫–∞ –º–µ–∂–¥—É —É–¥–∞—Ä–∞–º–∏ (–≤ —Å–µ–∫—É–Ω–¥–∞—Ö)")]
     public float hitCooldown = 0.4f;
-    [Tooltip("—ÔËÒÓÍ ËÌÒÚÛÏÂÌÚÓ‚, ÍÓÚÓ˚ÏË ÏÓÊÌÓ ˝ÚÓ ÒÎÓÏ‡Ú¸ (Ì‡ÔËÏÂ: “ÓÔÓ ‰Îˇ ‰ÂÂ‚‡,  ËÍ‡ ‰Îˇ Í‡ÏÌˇ)")]
+    [Tooltip("–°–ø–∏—Å–æ–∫ –∏–Ω—Å—Ç—Ä—É–º–µ–Ω—Ç–æ–≤, –∫–æ—Ç–æ—Ä—ã–º–∏ –º–æ–∂–Ω–æ —ç—Ç–æ —Å–ª–æ–º–∞—Ç—å (–Ω–∞–ø—Ä–∏–º–µ—Ä: –¢–æ–ø–æ—Ä –¥–ª—è –¥–µ—Ä–µ–≤–∞, –ö–∏—Ä–∫–∞ –¥–ª—è –∫–∞–º–Ω—è)")]
     public ItemData[] allowedTools;
 
-    [Header("1. Œ—ÕŒ¬ÕŒ… ƒ–Œœ (√‡‡ÌÚËÓ‚‡ÌÌ˚È)")]
-    [Tooltip("œÂÙ‡· ÔÂ‰ÏÂÚ‡, ÍÓÚÓ˚È ‚˚Ô‡‰‡ÂÚ ‚ÒÂ„‰‡ (ƒÂÂ‚Ó,  ‡ÏÂÌ¸, ¬ÓÎÓÍÌÓ Ú‡‚˚)")]
+    [Header("1. –û–°–ù–û–í–ù–û–ô –î–†–û–ü (–ì–∞—Ä–∞–Ω—Ç–∏—Ä–æ–≤–∞–Ω–Ω—ã–π)")]
+    [Tooltip("–ü—Ä–µ—Ñ–∞–± –ø—Ä–µ–¥–º–µ—Ç–∞, –∫–æ—Ç–æ—Ä—ã–π –≤—ã–ø–∞–¥–∞–µ—Ç –≤—Å–µ–≥–¥–∞ (–î–µ—Ä–µ–≤–æ, –ö–∞–º–µ–Ω—å, –í–æ–ª–æ–∫–Ω–æ —Ç—Ä–∞–≤—ã)")]
     public GameObject mainDropPrefab;
     public int minMainAmount = 2;
     public int maxMainAmount = 4;
 
-    [Header("2. ƒŒœŒÀÕ»“≈À‹Õ€… ƒ–Œœ (ÿ‡ÌÒÓ‚˚È)")]
-    [Tooltip("œÂÙ‡· Â‰ÍÓ„Ó/·ÓÌÛÒÌÓ„Ó ÔÂ‰ÏÂÚ‡ (œ‡ÎÍË,  ÂÏÌËÈ, —ÂÏÂÌ‡)")]
+    [Header("2. –î–û–ü–û–õ–ù–ò–¢–ï–õ–¨–ù–´–ô –î–†–û–ü (–®–∞–Ω—Å–æ–≤—ã–π)")]
+    [Tooltip("–ü—Ä–µ—Ñ–∞–± —Ä–µ–¥–∫–æ–≥–æ/–±–æ–Ω—É—Å–Ω–æ–≥–æ –ø—Ä–µ–¥–º–µ—Ç–∞ (–ü–∞–ª–∫–∏, –ö—Ä–µ–º–Ω–∏–π, –°–µ–º–µ–Ω–∞)")]
     public GameObject bonusDropPrefab;
     [Range(0, 100)]
-    [Tooltip("ÿ‡ÌÒ ‚˚Ô‡‰ÂÌËˇ ·ÓÌÛÒÌÓ„Ó ÔÂ‰ÏÂÚ‡ ‚ ÔÓˆÂÌÚ‡ı (0-100)")]
+    [Tooltip("–®–∞–Ω—Å –≤—ã–ø–∞–¥–µ–Ω–∏—è –±–æ–Ω—É—Å–Ω–æ–≥–æ –ø—Ä–µ–¥–º–µ—Ç–∞ –≤ –ø—Ä–æ—Ü–µ–Ω—Ç–∞—Ö (0-100)")]
     public int bonusDropChance = 30;
     public int minBonusAmount = 1;
     public int maxBonusAmount = 2;
+
+    [Header("–ù–∞—Å—Ç—Ä–æ–π–∫–∏ –∞—É–¥–∏–æ")]
+    [Tooltip("–ó–≤—É–∫–∏ —Ä–∞–∑—Ä—É—à–µ–Ω–∏—è (–æ–¥–∏–Ω –±—É–¥–µ—Ç –≤—ã–±—Ä–∞–Ω —Å–ª—É—á–∞–π–Ω–æ –ø—Ä–∏ —É–Ω–∏—á—Ç–æ–∂–µ–Ω–∏–∏)")]
+    public AudioClip[] destroySounds;
 
     private int currentHits;
     private bool isPlayerNear = false;
@@ -50,14 +54,14 @@ public class ResourceNode : MonoBehaviour
     {
         ItemData activeItem = InventoryManager.instance.GetActiveItem();
 
-        // 1. œÓ‚ÂˇÂÏ, ‰ÂÊËÚ ÎË ÀÂÓ ıÓÚ¸ Í‡ÍÓÈ-ÚÓ ËÌÒÚÛÏÂÌÚ
+        // 1. –ü—Ä–æ–≤–µ—Ä—è–µ–º, –¥–µ—Ä–∂–∏—Ç –ª–∏ –õ–µ–æ —Ö–æ—Ç—å –∫–∞–∫–æ–π-—Ç–æ –∏–Ω—Å—Ç—Ä—É–º–µ–Ω—Ç
         if (activeItem == null || !activeItem.isTool)
         {
-            Debug.Log("›ÚÓ ÌÂ ‰Ó·˚Ú¸ „ÓÎ˚ÏË ÛÍ‡ÏË! ÕÛÊÂÌ ËÌÒÚÛÏÂÌÚ.");
+            Debug.Log("–≠—Ç–æ –Ω–µ –¥–æ–±—ã—Ç—å –≥–æ–ª—ã–º–∏ —Ä—É–∫–∞–º–∏! –ù—É–∂–µ–Ω –∏–Ω—Å—Ç—Ä—É–º–µ–Ω—Ç.");
             return;
         }
 
-        // 2. œÓ‚ÂˇÂÏ, ÔÓ‰ıÓ‰ËÚ ÎË ˝ÚÓÚ ËÌÒÚÛÏÂÌÚ ÍÓÌÍÂÚÌÓ ‰Îˇ ˝ÚÓ„Ó ÂÒÛÒ‡
+        // 2. –ü—Ä–æ–≤–µ—Ä—è–µ–º, –ø–æ–¥—Ö–æ–¥–∏—Ç –ª–∏ —ç—Ç–æ—Ç –∏–Ω—Å—Ç—Ä—É–º–µ–Ω—Ç –∫–æ–Ω–∫—Ä–µ—Ç–Ω–æ –¥–ª—è —ç—Ç–æ–≥–æ —Ä–µ—Å—É—Ä—Å–∞
         bool isCorrectTool = false;
         foreach (ItemData tool in allowedTools)
         {
@@ -70,11 +74,11 @@ public class ResourceNode : MonoBehaviour
 
         if (!isCorrectTool)
         {
-            Debug.Log("›ÚÓÚ ËÌÒÚÛÏÂÌÚ ÌÂ ÔÓ‰ıÓ‰ËÚ ‰Îˇ ˝ÚÓ„Ó ÂÒÛÒ‡!");
+            Debug.Log("–≠—Ç–æ—Ç –∏–Ω—Å—Ç—Ä—É–º–µ–Ω—Ç –Ω–µ –ø–æ–¥—Ö–æ–¥–∏—Ç –¥–ª—è —ç—Ç–æ–≥–æ —Ä–µ—Å—É—Ä—Å–∞!");
             return;
         }
 
-        // 3. ”‰‡ ÔÓ¯ÂÎ ÛÒÔÂ¯ÌÓ!
+        // 3. –£–¥–∞—Ä –ø—Ä–æ—à–µ–ª —É—Å–ø–µ—à–Ω–æ!
         currentHits--;
         InventoryManager.instance.DamageActiveTool();
 
@@ -86,7 +90,17 @@ public class ResourceNode : MonoBehaviour
 
     private void BreakNode()
     {
-        // --- 1. —Ô‡‚Ì „‡‡ÌÚËÓ‚‡ÌÌÓ„Ó ÓÒÌÓ‚ÌÓ„Ó ‰ÓÔ‡ ---
+        // –í–æ—Å–ø—Ä–æ–∏–∑–≤–æ–¥–∏–º —Å–ª—É—á–∞–π–Ω—ã–π –∑–≤—É–∫ —Ä–∞–∑—Ä—É—à–µ–Ω–∏—è, –µ—Å–ª–∏ –æ–Ω–∏ –∑–∞–¥–∞–Ω—ã
+        if (destroySounds != null && destroySounds.Length > 0)
+        {
+            AudioClip clip = destroySounds[Random.Range(0, destroySounds.Length)];
+            if (clip != null)
+            {
+                AudioSource.PlayClipAtPoint(clip, transform.position);
+            }
+        }
+
+        // --- 1. –°–ø–∞–≤–Ω –≥–∞—Ä–∞–Ω—Ç–∏—Ä–æ–≤–∞–Ω–Ω–æ–≥–æ –æ—Å–Ω–æ–≤–Ω–æ–≥–æ –¥—Ä–æ–ø–∞ ---
         int mainCount = Random.Range(minMainAmount, maxMainAmount + 1);
 
         for (int i = 0; i < mainCount; i++)
@@ -94,7 +108,7 @@ public class ResourceNode : MonoBehaviour
             SpawnItem(mainDropPrefab);
         }
 
-        // --- 2. —Ô‡‚Ì ·ÓÌÛÒÌÓ„Ó ‰ÓÔ‡ ÔÓ ¯‡ÌÒÛ ---
+        // --- 2. –°–ø–∞–≤–Ω –±–æ–Ω—É—Å–Ω–æ–≥–æ –¥—Ä–æ–ø–∞ –ø–æ —à–∞–Ω—Å—É ---
         int randomChance = Random.Range(1, 101);
 
         if (randomChance <= bonusDropChance)
@@ -107,20 +121,20 @@ public class ResourceNode : MonoBehaviour
             }
         }
 
-        // 3. ”ÌË˜ÚÓÊ‡ÂÏ Ò‡Ï Ó·˙ÂÍÚ ÂÒÛÒ‡
+        // 3. –£–Ω–∏—á—Ç–æ–∂–∞–µ–º —Å–∞–º –æ–±—ä–µ–∫—Ç —Ä–µ—Å—É—Ä—Å–∞
         Destroy(gameObject);
     }
 
-    // ¬ÒÔÓÏÓ„‡ÚÂÎ¸Ì˚È ÏÂÚÓ‰ ‰Îˇ ÒÔ‡‚Ì‡ Ò ‡ÁÎÂÚÓÏ, ˜ÚÓ·˚ ÌÂ ‰Û·ÎËÓ‚‡Ú¸ ÍÓ‰
+    // –í—Å–ø–æ–º–æ–≥–∞—Ç–µ–ª—å–Ω—ã–π –º–µ—Ç–æ–¥ –¥–ª—è —Å–ø–∞–≤–Ω–∞ —Å —Ä–∞–∑–ª–µ—Ç–æ–º, —á—Ç–æ–±—ã –Ω–µ –¥—É–±–ª–∏—Ä–æ–≤–∞—Ç—å –∫–æ–¥
     private void SpawnItem(GameObject prefab)
     {
         if (prefab != null)
         {
-            // ÕÂ·ÓÎ¸¯ÓÂ ÒÎÛ˜‡ÈÌÓÂ ÒÏÂ˘ÂÌËÂ ÔË ÔÓˇ‚ÎÂÌËË
+            // –ù–µ–±–æ–ª—å—à–æ–µ —Å–ª—É—á–∞–π–Ω–æ–µ —Å–º–µ—â–µ–Ω–∏–µ –ø—Ä–∏ –ø–æ—è–≤–ª–µ–Ω–∏–∏
             Vector3 spawnPosition = transform.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(0.1f, 0.2f), 0f);
             GameObject droppedItem = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
-            // «‡ÔÛÒÍ ÔÎ‡‚ÌÓ„Ó ‡ÁÎÂÚ‡ SmoothDrop
+            // –ó–∞–ø—É—Å–∫ –ø–ª–∞–≤–Ω–æ–≥–æ —Ä–∞–∑–ª–µ—Ç–∞ SmoothDrop
             if (droppedItem.TryGetComponent<SmoothDrop>(out var smoothDrop))
             {
                 smoothDrop.SetupDrop();
