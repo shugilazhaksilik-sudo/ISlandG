@@ -96,7 +96,7 @@ public class ResourceNode : MonoBehaviour
                 AudioClip clip = hitSounds[Random.Range(0, hitSounds.Length)];
                 if (clip != null)
                 {
-                    AudioSource.PlayClipAtPoint(clip, transform.position);
+                    AudioManager.PlaySFX(clip, transform.position);
                 }
             }
         }
@@ -110,7 +110,7 @@ public class ResourceNode : MonoBehaviour
             AudioClip clip = destroySounds[Random.Range(0, destroySounds.Length)];
             if (clip != null)
             {
-                AudioSource.PlayClipAtPoint(clip, transform.position);
+                AudioManager.PlaySFX(clip, transform.position);
             }
         }
 
