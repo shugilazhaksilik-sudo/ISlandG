@@ -10,7 +10,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Используем GetAxisRaw для четкого отклика (0 или 1)
+        if (Time.timeScale == 0f)
+        {
+            movement = Vector2.zero;
+            animator.SetFloat("Speed", 0f);
+            return;
+        }
+
+        // РСЃРїРѕР»СЊР·СѓРµРј GetAxisRaw РґР»СЏ С‡РµС‚РєРѕРіРѕ РѕС‚РєР»РёРєР° (0 РёР»Рё 1)
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -25,8 +32,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // ПРАВКА ДЛЯ ПЛАВНОСТИ: используем velocity вместо MovePosition
-        // Это позволит параметру Interpolate в Rigidbody2D работать на 100%
+        if (Time.timeScale == 0f)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        // РџР РђР’РљРђ Р”Р›РЇ РџР›РђР’РќРћРЎРўР: РёСЃРїРѕР»СЊР·СѓРµРј velocity РІРјРµСЃС‚Рѕ MovePosition
+        // Р­С‚Рѕ РїРѕР·РІРѕР»РёС‚ РїР°СЂР°РјРµС‚СЂСѓ Interpolate РІ Rigidbody2D СЂР°Р±РѕС‚Р°С‚СЊ РЅР° 100%
         rb.velocity = movement.normalized * moveSpeed;
     }
 }
