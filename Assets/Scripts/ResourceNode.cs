@@ -28,6 +28,8 @@ public class ResourceNode : MonoBehaviour
     [Header("Настройки аудио")]
     [Tooltip("Звуки разрушения (один будет выбран случайно при уничтожении)")]
     public AudioClip[] destroySounds;
+    [Tooltip("Звуки при каждом обычном ударе (один будет выбран случайно)")]
+    public AudioClip[] hitSounds;
 
     private int currentHits;
     private bool isPlayerNear = false;
@@ -85,6 +87,18 @@ public class ResourceNode : MonoBehaviour
         if (currentHits <= 0)
         {
             BreakNode();
+        }
+        else
+        {
+            // Воспроизводим звук удара (если объект еще не сломан окончательно)
+            if (hitSounds != null && hitSounds.Length > 0)
+            {
+                AudioClip clip = hitSounds[Random.Range(0, hitSounds.Length)];
+                if (clip != null)
+                {
+                    AudioSource.PlayClipAtPoint(clip, transform.position);
+                }
+            }
         }
     }
 
