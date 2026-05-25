@@ -196,7 +196,17 @@ public class SurvivalSystem : MonoBehaviour
         if (hurtSoundTimer <= 0f && amount > 0f)
         {
             PlayHurtSound(damageType);
-            hurtSoundTimer = hurtSoundCooldown; // Включаем задержку
+
+            // Если урон от огня — ставим задержку, равную длине аудиоклипа, чтобы звуки шли непрерывно друг за другом без наслоений.
+            // Для обычного урона оставляем стандартную задержку (0.8с).
+            if (damageType == DamageType.Fire && fireHurtSound != null)
+            {
+                hurtSoundTimer = fireHurtSound.length;
+            }
+            else
+            {
+                hurtSoundTimer = hurtSoundCooldown;
+            }
         }
     }
 
