@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +28,9 @@ public class TimeManager : MonoBehaviour
 
     private int currentDay = 1;
     private float rainTintIntensity = 0f;
+
+    [HideInInspector]
+    public float lightningIntensity = 0f; // Интенсивность вспышки молнии (0 - нет вспышки, 1 - полная вспышка)
 
     private void Awake()
     {
@@ -90,6 +93,12 @@ public class TimeManager : MonoBehaviour
                 // Альфа плавно нарастает до заданной прозрачности шторма, но сохраняет ночную темноту, если сейчас ночь
                 float targetAlpha = Mathf.Max(baseDayNightColor.a, stormTint.a * rainTintIntensity);
                 finalColor.a = targetAlpha;
+            }
+
+            // Вспышка молнии временно выбеливает экран
+            if (lightningIntensity > 0f)
+            {
+                finalColor = Color.Lerp(finalColor, Color.white, lightningIntensity);
             }
 
             screenOverlay.color = finalColor;

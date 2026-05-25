@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class WeatherManager : MonoBehaviour
@@ -37,6 +37,19 @@ public class WeatherManager : MonoBehaviour
     private Coroutine audioFadeCoroutine;
     private Coroutine particleFadeCoroutine;
 
+    [Header("Lightning & Thunder Settings")]
+    [Tooltip("Аудио-источник для звука грома (если пусто, проиграется на источнике дождя)")]
+    public AudioSource thunderAudioSource;
+    [Tooltip("Звук грома")]
+    public AudioClip thunderSound;
+    [Tooltip("Шанс возникновения молнии в секунду во время дождя (%)")]
+    [Range(0f, 100f)]
+    public float lightningChancePerSecond = 5f;
+    [Tooltip("Минимальная задержка между молниями в секундах")]
+    public float minLightningCooldown = 10f;
+
+    private float lightningCooldownTimer = 0f;
+
     private void Awake()
     {
         instance = this;
@@ -60,6 +73,12 @@ public class WeatherManager : MonoBehaviour
 
         isRaining = false;
         weatherTimer = weatherCheckInterval;
+        lightningCooldownTimer = 0f;
+
+        if (TimeManager.instance != null)
+        {
+            TimeManager.instance.lightningIntensity = 0f;
+        }
     }
 
     private void Update()
@@ -69,6 +88,73 @@ public class WeatherManager : MonoBehaviour
         {
             weatherTimer = weatherCheckInterval;
             TryChangeWeather();
+        }
+
+        // Логика молний во время дождя
+        if (isRaining)
+        {
+            if (lightningCooldownTimer > 0f)
+            {
+                lightningCooldownTimer -= Time.deltaTime;
+            }
+            else
+            {
+                // Каждую секунду проверяем шанс возникновения молнии
+                float chance = lightningChancePerSecond * Time.deltaTime;
+                if (Random.Range(0f, 100f) < chance)
+                {
+                    StartCoroutine(TriggerLightning());
+                    lightningCooldownTimer = minLightningCooldown;
+                }
+            }
+        }
+        else
+        {
+            // Сбрасываем таймер кулдауна, если дождь закончился
+            lightningCooldownTimer = 0f;
+        }
+    }
+
+    private IEnumerator TriggerLightning()
+    {
+        // 1. Вспышка молнии (двойная вспышка для максимальной реалистичности!)
+        if (TimeManager.instance != null)
+        {
+            // Первая вспышка (более мягкая, прозрачная)
+            TimeManager.instance.lightningIntensity = 0.4f;
+            yield return new WaitForSeconds(0.05f);
+            TimeManager.instance.lightningIntensity = 0.05f;
+            yield return new WaitForSeconds(0.05f);
+
+            // Вторая вспышка (максимум до 0.5f для приятной прозрачности)
+            TimeManager.instance.lightningIntensity = 0.5f;
+            yield return new WaitForSeconds(0.15f);
+
+            // Плавное угасание вспышки
+            float elapsed = 0f;
+            float flashFadeDuration = 0.4f;
+            while (elapsed < flashFadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                TimeManager.instance.lightningIntensity = Mathf.Lerp(0.5f, 0f, elapsed / flashFadeDuration);
+                yield return null;
+            }
+            TimeManager.instance.lightningIntensity = 0f;
+        }
+
+        // 2. Реалистичная задержка звука грома (сокращена в два раза для динамичности)
+        float soundDelay = Random.Range(0.15f, 0.9f);
+        yield return new WaitForSeconds(soundDelay);
+
+        // 3. Воспроизведение звука грома
+        if (thunderAudioSource != null && thunderSound != null)
+        {
+            thunderAudioSource.PlayOneShot(thunderSound);
+        }
+        else if (rainAudioSource != null && thunderSound != null)
+        {
+            // Если отдельного источника нет, проигрываем поверх дождя на его аудио-источнике
+            rainAudioSource.PlayOneShot(thunderSound);
         }
     }
 
